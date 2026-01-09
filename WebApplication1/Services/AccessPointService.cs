@@ -18,7 +18,6 @@ public class AccessPointService : IAccessPointService
 
     public async Task<AccessPointDto?> GetByIdAsync(int id, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - любой авторизованный может читать
         if (currentUserRoles.Count == 0)
             throw new UnauthorizedAccessException("Access denied");
 
@@ -46,7 +45,6 @@ public class AccessPointService : IAccessPointService
 
     public async Task<PagedResponseDto<AccessPointDto>> GetAllAsync(int page, int pageSize, string? search, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - любой авторизованный может читать
         if (currentUserRoles.Count == 0)
             throw new UnauthorizedAccessException("Access denied");
 
@@ -66,7 +64,6 @@ public class AccessPointService : IAccessPointService
 
     public async Task<AccessPointDto> CreateAsync(CreateAccessPointDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут создавать
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can create access points");
 
@@ -90,7 +87,6 @@ public class AccessPointService : IAccessPointService
 
     public async Task<AccessPointDto> UpdateAsync(int id, UpdateAccessPointDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут обновлять
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can update access points");
 
@@ -120,7 +116,6 @@ public class AccessPointService : IAccessPointService
 
     public async Task DeleteAsync(int id, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin может удалять
         if (!currentUserRoles.Contains("Admin"))
             throw new UnauthorizedAccessException("Only Admin can delete access points");
 

@@ -25,7 +25,6 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Указываем имена таблиц в нижнем регистре (как в PostgreSQL)
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<Role>().ToTable("roles");
         modelBuilder.Entity<Permission>().ToTable("permissions");
@@ -34,7 +33,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<AccessLog>().ToTable("access_logs");
         modelBuilder.Entity<ApiKey>().ToTable("api_keys");
 
-        // UserRole many-to-many
         modelBuilder.Entity<UserRole>()
             .ToTable("user_roles")
             .HasKey(ur => new { ur.UserId, ur.RoleId });
@@ -49,17 +47,14 @@ public class ApplicationDbContext : DbContext
             .WithMany(r => r.UserRoles)
             .HasForeignKey(ur => ur.RoleId);
 
-        // RolePermission many-to-many
         modelBuilder.Entity<RolePermission>()
             .ToTable("role_permissions")
             .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
-        // UserAccessCard many-to-many
         modelBuilder.Entity<UserAccessCard>()
             .ToTable("user_access_cards")
             .HasKey(uac => new { uac.UserId, uac.AccessCardId });
 
-        // AccessCardAccessPoint many-to-many
         modelBuilder.Entity<AccessCardAccessPoint>()
             .ToTable("access_card_access_points")
             .HasKey(acap => new { acap.AccessCardId, acap.AccessPointId });

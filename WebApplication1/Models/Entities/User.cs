@@ -12,7 +12,6 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation properties
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     public ICollection<UserAccessCard> UserAccessCards { get; set; } = new List<UserAccessCard>();
     public ICollection<AccessLog> AccessLogs { get; set; } = new List<AccessLog>();

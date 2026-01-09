@@ -26,14 +26,12 @@ public class UserService : IUserService
 
     public async Task<UserDto?> GetByIdAsync(int id, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка доступа
         if (!currentUserRoles.Contains("Admin") && currentUserId != id)
         {
             if (!currentUserRoles.Contains("Manager") && !currentUserRoles.Contains("User"))
                 throw new UnauthorizedAccessException("Access denied");
         }
 
-        // Кэширование (опционально)
         var cacheKey = $"user:{id}";
         if (_cacheService != null)
         {
@@ -56,7 +54,6 @@ public class UserService : IUserService
 
     public async Task<PagedResponseDto<UserDto>> GetAllAsync(int page, int pageSize, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - любой авторизованный может читать
         if (currentUserRoles.Count == 0)
             throw new UnauthorizedAccessException("Access denied");
 
@@ -80,7 +77,6 @@ public class UserService : IUserService
 
     public async Task<UserDto> CreateAsync(CreateUserDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут создавать
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can create users");
 
@@ -102,7 +98,6 @@ public class UserService : IUserService
 
         user = await _userRepository.CreateAsync(user);
 
-        // Назначаем роли
         if (dto.RoleIds.Any())
         {
             user.UserRoles = dto.RoleIds.Select(roleId => new UserRole
@@ -112,7 +107,6 @@ public class UserService : IUserService
             }).ToList();
             await _userRepository.UpdateAsync(user);
             
-            // Перезагружаем пользователя с ролями для корректного маппинга
             user = await _userRepository.GetByIdAsync(user.Id);
             if (user == null)
                 throw new KeyNotFoundException("User not found after creation");
@@ -128,7 +122,6 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateAsync(int id, UpdateUserDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут обновлять
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can update users");
 
@@ -152,13 +145,11 @@ public class UserService : IUserService
 
         if (dto.RoleIds != null)
         {
-            // Удаляем старые связи через контекст
             var existingUserRoles = await _context.UserRoles
                 .Where(ur => ur.UserId == user.Id)
                 .ToListAsync();
             _context.UserRoles.RemoveRange(existingUserRoles);
             
-            // Добавляем новые связи
             var newUserRoles = dto.RoleIds.Select(roleId => new UserRole
             {
                 UserId = user.Id,
@@ -170,7 +161,6 @@ public class UserService : IUserService
 
         user = await _userRepository.UpdateAsync(user);
         
-        // Перезагружаем пользователя с ролями
         user = await _userRepository.GetByIdAsync(user.Id);
         if (user == null)
             throw new KeyNotFoundException("User not found after update");
@@ -186,7 +176,6 @@ public class UserService : IUserService
 
     public async Task DeleteAsync(int id, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin может удалять
         if (!currentUserRoles.Contains("Admin"))
             throw new UnauthorizedAccessException("Only Admin can delete users");
 

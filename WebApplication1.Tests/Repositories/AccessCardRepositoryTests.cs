@@ -33,7 +33,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task CreateAsync_ShouldCreateAccessCard()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -43,10 +42,8 @@ public class AccessCardRepositoryTests
             CardType = "RFID"
         };
 
-        // Act
         var result = await repository.CreateAsync(accessCard);
 
-        // Assert
         Assert.NotNull(result);
         Assert.True(result.Id > 0);
         Assert.Equal("CARD001", result.CardNumber);
@@ -58,7 +55,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task GetByIdAsync_ShouldReturnAccessCard()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -69,10 +65,8 @@ public class AccessCardRepositoryTests
         };
         var created = await repository.CreateAsync(accessCard);
 
-        // Act
         var result = await repository.GetByIdAsync(created.Id);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(created.Id, result.Id);
         Assert.Equal("CARD001", result.CardNumber);
@@ -81,7 +75,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task GetByCardNumberAsync_ShouldReturnAccessCard()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -92,10 +85,8 @@ public class AccessCardRepositoryTests
         };
         await repository.CreateAsync(accessCard);
 
-        // Act
         var result = await repository.GetByCardNumberAsync("CARD001");
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal("CARD001", result.CardNumber);
     }
@@ -103,7 +94,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task GetAllAsync_ShouldReturnAllAccessCards()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -111,10 +101,8 @@ public class AccessCardRepositoryTests
         await repository.CreateAsync(new AccessCard { CardNumber = "CARD001", CardType = "RFID" });
         await repository.CreateAsync(new AccessCard { CardNumber = "CARD002", CardType = "Magnetic" });
 
-        // Act
         var result = await repository.GetAllAsync();
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
     }
@@ -122,7 +110,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task UpdateAsync_ShouldUpdateAccessCard()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -135,10 +122,8 @@ public class AccessCardRepositoryTests
         created.CardType = "Magnetic";
         created.IsActive = false;
 
-        // Act
         var result = await repository.UpdateAsync(created);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal("Magnetic", result.CardType);
         Assert.False(result.IsActive);
@@ -148,7 +133,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task DeleteAsync_ShouldDeleteAccessCard()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -159,10 +143,8 @@ public class AccessCardRepositoryTests
         };
         var created = await repository.CreateAsync(accessCard);
 
-        // Act
         await repository.DeleteAsync(created.Id);
 
-        // Assert
         var result = await repository.GetByIdAsync(created.Id);
         Assert.Null(result);
     }
@@ -170,7 +152,6 @@ public class AccessCardRepositoryTests
     [Fact]
     public async Task ExistsAsync_ShouldReturnTrue_WhenAccessCardExists()
     {
-        // Arrange
         using var context = GetDbContext();
         var mockConfig = GetMockConfiguration();
         var repository = new AccessCardRepository(context, mockConfig);
@@ -181,10 +162,8 @@ public class AccessCardRepositoryTests
         };
         var created = await repository.CreateAsync(accessCard);
 
-        // Act
         var result = await repository.ExistsAsync(created.Id);
 
-        // Assert
         Assert.True(result);
     }
 

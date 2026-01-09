@@ -6,9 +6,6 @@ using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Controllers;
 
-/// <summary>
-/// Контроллер для управления API Key
-/// </summary>
 [ApiController]
 [Route("api/apikeys")]
 [Authorize(Roles = "Admin")]
@@ -24,9 +21,6 @@ public class ApiKeysController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// Получить список всех API Key
-    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(List<ApiKeyDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -51,12 +45,6 @@ public class ApiKeysController : ControllerBase
         return Ok(apiKey);
     }
 
-    /// <summary>
-    /// Создать новый API Key
-    /// </summary>
-    /// <param name="dto">Данные для создания API Key</param>
-    /// <param name="validator">Валидатор</param>
-    /// <returns>Созданный API Key</returns>
     [HttpPost]
     [ProducesResponseType(typeof(ApiKeyDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

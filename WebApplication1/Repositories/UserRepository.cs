@@ -46,7 +46,6 @@ public class UserRepository : IUserRepository
 
     public async Task<User> CreateAsync(User user)
     {
-        // Убеждаемся, что все DateTime в UTC
         user.CreatedAt = DateTime.UtcNow;
         user.UpdatedAt = DateTime.UtcNow;
         _context.Users.Add(user);
@@ -56,7 +55,6 @@ public class UserRepository : IUserRepository
 
     public async Task<User> UpdateAsync(User user)
     {
-        // Убеждаемся, что все DateTime в UTC
         user.UpdatedAt = DateTime.UtcNow;
         if (user.CreatedAt.Kind != DateTimeKind.Utc)
             user.CreatedAt = user.CreatedAt.ToUniversalTime();

@@ -41,7 +41,6 @@ public class AccessCardRepository : IAccessCardRepository
 
     public async Task<AccessCard> CreateAsync(AccessCard accessCard)
     {
-        // Убеждаемся, что все DateTime в UTC
         accessCard.CreatedAt = DateTime.UtcNow;
         accessCard.UpdatedAt = DateTime.UtcNow;
         if (accessCard.ExpiresAt.HasValue && accessCard.ExpiresAt.Value.Kind != DateTimeKind.Utc)
@@ -54,7 +53,6 @@ public class AccessCardRepository : IAccessCardRepository
 
     public async Task<AccessCard> UpdateAsync(AccessCard accessCard)
     {
-        // Убеждаемся, что все DateTime в UTC
         accessCard.UpdatedAt = DateTime.UtcNow;
         if (accessCard.CreatedAt.Kind != DateTimeKind.Utc)
             accessCard.CreatedAt = accessCard.CreatedAt.ToUniversalTime();
@@ -81,7 +79,6 @@ public class AccessCardRepository : IAccessCardRepository
         return await _context.AccessCards.AnyAsync(ac => ac.Id == id);
     }
 
-    // Используем Dapper для работы с many-to-many связями в транзакции
     public async Task AssignAccessPointsAsync(int cardId, List<int> accessPointIds)
     {
         using var connection = new NpgsqlConnection(_connectionString);
@@ -91,13 +88,11 @@ public class AccessCardRepository : IAccessCardRepository
         
         try
         {
-            // Удаляем старые связи
             await connection.ExecuteAsync(
                 "DELETE FROM access_card_access_points WHERE access_card_id = @CardId",
                 new { CardId = cardId },
                 transaction);
 
-            // Добавляем новые связи
             if (accessPointIds.Any())
             {
                 var insertSql = @"

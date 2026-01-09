@@ -2,7 +2,6 @@ using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Services;
 
-// Заглушка для кэша, когда Redis недоступен
 public class NullCacheService : ICacheService
 {
     public Task<T?> GetAsync<T>(string key) where T : class

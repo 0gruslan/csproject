@@ -24,14 +24,13 @@ public class ApiKeyAuthenticationMiddleware
             if (apiKey != null && apiKey.IsActive && 
                 (apiKey.ExpiresAt == null || apiKey.ExpiresAt > DateTime.UtcNow))
             {
-                // Обновляем время последнего использования в БД
                 await apiKeyRepository.UpdateLastUsedAsync(apiKey.Id);
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, "api-key"),
                     new Claim("ApiKeyId", apiKey.Id.ToString()),
-                    new Claim(ClaimTypes.Role, "Admin") // API Key имеет полный доступ
+                    new Claim(ClaimTypes.Role, "Admin")
                 };
 
                 var identity = new ClaimsIdentity(claims, "ApiKey");

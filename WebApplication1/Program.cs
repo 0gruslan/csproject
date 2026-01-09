@@ -16,7 +16,6 @@ using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -64,12 +63,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
            .UseSnakeCaseNamingConvention());
 
-// Redis
 var redisConnection = builder.Configuration.GetConnectionString("Redis");
 if (!string.IsNullOrEmpty(redisConnection))
 {
@@ -81,7 +78,6 @@ if (!string.IsNullOrEmpty(redisConnection))
     }
     catch (Exception ex)
     {
-        // Redis не критичен для работы приложения, продолжаем без кэширования
         builder.Services.AddScoped<ICacheService, NullCacheService>();
     }
 }
@@ -90,7 +86,6 @@ else
     builder.Services.AddScoped<ICacheService, NullCacheService>();
 }
 
-// JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForJWTTokenGeneration123456789";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "AccessControlSystem";
 
@@ -118,7 +113,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ManagerOrAdmin", policy => policy.RequireRole("Admin", "Manager"));
 });
 
-// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IAccessPointRepository, AccessPointRepository>();
@@ -126,7 +120,6 @@ builder.Services.AddScoped<IAccessCardRepository, AccessCardRepository>();
 builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
 
-// Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccessPointService, AccessPointService>();
@@ -134,18 +127,15 @@ builder.Services.AddScoped<IAccessCardService, AccessCardService>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
 builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 
-// Validators
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateApiKeyDtoValidator>();
 
-// Health Checks
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? "", name: "postgresql")
     .AddRedis(builder.Configuration.GetConnectionString("Redis") ?? "", name: "redis");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -162,7 +152,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// Prometheus metrics
 app.UseMetricServer();
 app.UseHttpMetrics();
 

@@ -20,7 +20,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task CreateAsync_ShouldCreateUser()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -30,10 +29,8 @@ public class UserRepositoryTests
             PasswordHash = "hash"
         };
 
-        // Act
         var result = await repository.CreateAsync(user);
 
-        // Assert
         Assert.NotNull(result);
         Assert.True(result.Id > 0);
         Assert.Equal("testuser", result.Username);
@@ -42,7 +39,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task GetByIdAsync_ShouldReturnUser()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -53,10 +49,8 @@ public class UserRepositoryTests
         };
         var created = await repository.CreateAsync(user);
 
-        // Act
         var result = await repository.GetByIdAsync(created.Id);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(created.Id, result.Id);
         Assert.Equal("testuser", result.Username);
@@ -65,7 +59,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task GetByUsernameAsync_ShouldReturnUser()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -76,10 +69,8 @@ public class UserRepositoryTests
         };
         await repository.CreateAsync(user);
 
-        // Act
         var result = await repository.GetByUsernameAsync("testuser");
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal("testuser", result.Username);
     }
@@ -87,7 +78,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task UpdateAsync_ShouldUpdateUser()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -99,10 +89,8 @@ public class UserRepositoryTests
         var created = await repository.CreateAsync(user);
         created.FirstName = "Updated";
 
-        // Act
         var result = await repository.UpdateAsync(created);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal("Updated", result.FirstName);
     }
@@ -110,7 +98,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task DeleteAsync_ShouldDeleteUser()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -121,10 +108,8 @@ public class UserRepositoryTests
         };
         var created = await repository.CreateAsync(user);
 
-        // Act
         await repository.DeleteAsync(created.Id);
 
-        // Assert
         var result = await repository.GetByIdAsync(created.Id);
         Assert.Null(result);
     }
@@ -132,7 +117,6 @@ public class UserRepositoryTests
     [Fact]
     public async Task ExistsAsync_ShouldReturnTrue_WhenUserExists()
     {
-        // Arrange
         using var context = GetDbContext();
         var repository = new UserRepository(context);
         var user = new User
@@ -143,10 +127,8 @@ public class UserRepositoryTests
         };
         var created = await repository.CreateAsync(user);
 
-        // Act
         var result = await repository.ExistsAsync(created.Id);
 
-        // Assert
         Assert.True(result);
     }
 }

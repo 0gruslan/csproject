@@ -33,14 +33,12 @@ public class AccessCardService : IAccessCardService
 
     public async Task<AccessCardDto> CreateAsync(CreateAccessCardDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут создавать
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can create access cards");
 
         if (await _accessCardRepository.GetByCardNumberAsync(dto.CardNumber) != null)
             throw new InvalidOperationException("Card number already exists");
 
-        // Проверяем существование точек доступа
         foreach (var accessPointId in dto.AccessPointIds)
         {
             if (!await _accessPointRepository.ExistsAsync(accessPointId))
@@ -57,7 +55,6 @@ public class AccessCardService : IAccessCardService
 
         accessCard = await _accessCardRepository.CreateAsync(accessCard);
 
-        // Назначаем точки доступа через Dapper
         if (dto.AccessPointIds.Any())
         {
             await _accessCardRepository.AssignAccessPointsAsync(accessCard.Id, dto.AccessPointIds);
@@ -68,7 +65,6 @@ public class AccessCardService : IAccessCardService
 
     public async Task<AccessCardDto> UpdateAsync(int id, UpdateAccessCardDto dto, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin и Manager могут обновлять
         if (!currentUserRoles.Contains("Admin") && !currentUserRoles.Contains("Manager"))
             throw new UnauthorizedAccessException("Only Admin and Manager can update access cards");
 
@@ -87,7 +83,6 @@ public class AccessCardService : IAccessCardService
 
         if (dto.AccessPointIds != null)
         {
-            // Проверяем существование точек доступа
             foreach (var accessPointId in dto.AccessPointIds)
             {
                 if (!await _accessPointRepository.ExistsAsync(accessPointId))
@@ -102,7 +97,6 @@ public class AccessCardService : IAccessCardService
 
     public async Task DeleteAsync(int id, int currentUserId, List<string> currentUserRoles)
     {
-        // Простая проверка - только Admin может удалять
         if (!currentUserRoles.Contains("Admin"))
             throw new UnauthorizedAccessException("Only Admin can delete access cards");
 

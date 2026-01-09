@@ -62,7 +62,6 @@ public class AccessPointRepository : IAccessPointRepository
 
     public async Task<AccessPoint> UpdateAsync(AccessPoint accessPoint)
     {
-        // Убеждаемся, что все DateTime в UTC
         accessPoint.UpdatedAt = DateTime.UtcNow;
         if (accessPoint.CreatedAt.Kind != DateTimeKind.Utc)
             accessPoint.CreatedAt = accessPoint.CreatedAt.ToUniversalTime();
