@@ -132,9 +132,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAccessPointService, AccessPointService>();
 builder.Services.AddScoped<IAccessCardService, AccessCardService>();
 builder.Services.AddScoped<IAccessLogService, AccessLogService>();
+builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 
 // Validators
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateApiKeyDtoValidator>();
 
 // Health Checks
 builder.Services.AddHealthChecks()
