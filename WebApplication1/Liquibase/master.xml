@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <include file="change-sets/001_initial_schema.sql" />
+    <include file="change-sets/002_initial_data.sql" />
+    <include file="change-sets/003_create_admin_user.sql" />
+</databaseChangeLog>
+
+

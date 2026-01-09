@@ -1,0 +1,13 @@
+# Этот файл можно использовать для локальной разработки
+# Скопируйте его в docker-compose.override.yml и настройте по необходимости
+
+version: '3.8'
+
+services:
+  api:
+    volumes:
+      - ./WebApplication1:/app
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+
